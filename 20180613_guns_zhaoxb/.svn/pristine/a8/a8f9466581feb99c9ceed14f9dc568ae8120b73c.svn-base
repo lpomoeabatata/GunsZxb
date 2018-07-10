@@ -1,0 +1,143 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Echarts方式修改投票</title>
+    <script src="../../../../static/js/echarts.min.js"></script>
+    <script src="../../../../static/js/jquery.min.js"></script>
+</head>
+
+<body>
+<fieldset>
+    <legend>请投下您宝贵的一票</legend>
+    <form action="" method="post">
+        <input type="radio" name="vote" value='1' checked>小布什
+        <input type="radio" name="vote" value='2'>奥巴马
+        <input type="button" value="投票" id="btn">
+        <!-- <input type="hidden" name="ac" value="ac"> -->
+    </form>
+</fieldset>
+<div id="mychart" style="width: 300px;height: 400px;"></div>
+</body>
+<script>
+    var opt = document.getElementsByName('vote');
+    var btn = document.getElementById('btn');
+    var vote;
+    var e = echarts.init(document.getElementById('mychart'));
+    var op = {
+        title: {
+            text: '参选人投票现状',
+            left: 'center'
+        },
+        legend: {
+            data: ['姓名'],
+            left: 'left'
+        },
+        //设置图表与容器盒子的边距
+        grid: {
+            top: 40,    //距离容器上边界40像素
+            left: '15%'   //距离容器下边界30像素
+        },
+        xAxis: {
+            data: []
+        },
+        yAxis: {
+
+        },
+        //鼠标悬停在数据条上时显示信息
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b},{c}"
+        },
+        series: [{
+            name: '姓名',
+            type: 'bar', //设置图表类型为柱形图
+            data: [],
+            itemStyle: {
+                normal: {
+                    label: {
+                        show: true,
+                        position: 'top',
+                        textStyle: {
+                            color: '#615a5a'
+                        },
+                        formatter: function (params) {
+                            if (params.value === 0) {
+                                return '';
+                            } else {
+                                return params.value;
+                            }
+                        }
+                    }
+                }
+            }
+        }]
+
+    };
+    //页面加载后显示当前参选人计票信息
+    $.ajax({
+        type: "post",
+        url: 'vote/list',
+        success: fn,
+        dataType: "json"
+    });
+
+    function fn(data) {
+        var votes = [];//投票数
+        var names = []; //参选人
+        console.log(data);
+        for (var i = 0; i < data.length; i++) {
+            names.push(data[i].voteName);
+            votes.push(data[i].voteCount);
+        }
+        console.log(names, votes);
+        //绑定数据
+        e.setOption({
+            xAxis: {
+                data: names
+            },
+            series: [{
+                name: '姓名',
+                data: votes
+            }]
+        })
+    }
+    e.setOption(op);
+    //点击投票后Ajax更新数据到后台并将结果显示到前台
+    btn.onclick = function () {
+        vote = opt[0].checked ? opt[0].value : opt[1].value;
+        $.ajax({
+            type: "post",
+            url: 'vote/update',
+            data: {"vote":vote},
+            success:fn,
+            error:function(){alert("您已经投过票了")},
+            dataType: "json"
+        });
+
+        function fn(data) {
+            var votes = [];//投票数
+            var names = []; //参选人
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                names.push(data[i].voteName);
+                votes.push(data[i].voteCount);
+            }
+            console.log(names, votes);
+            //绑定数据
+            e.setOption({
+                xAxis: {
+                    data: names
+                },
+                series: [{
+                    name: '姓名',
+                    data: votes
+                }]
+            });
+            alert("投票成功")
+        }
+    };
+
+</script>
+
+</html>  

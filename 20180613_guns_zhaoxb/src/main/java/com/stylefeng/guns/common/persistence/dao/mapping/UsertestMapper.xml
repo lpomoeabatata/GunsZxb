@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.common.persistence.dao.UsertestMapper">
+	<resultMap id="BaseResultMap" type="com.stylefeng.guns.common.persistence.model.Usertest">
+		<constructor>
+			<idArg column="t_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+			<arg column="t_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+			<arg column="t_phone" javaType="java.lang.String" jdbcType="VARCHAR" />
+			<arg column="t_address" javaType="java.lang.String" jdbcType="VARCHAR" />
+			<arg column="t_enrol_date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+			<arg column="t_des" javaType="java.lang.String" jdbcType="VARCHAR" />
+		</constructor>
+	</resultMap>
+	<insert id="addUsertest" parameterType="com.stylefeng.guns.common.persistence.model.Usertest">
+		insert into usertest
+		(name,phone,address,enrol_date,des)
+		values
+		(
+		#{name},
+		#{phone},
+		#{address},
+		#{enrolDate},
+		#{des}
+		)
+		<!--<insert id="insertShortTelBatch" parameterType="java.util.List">-->
+			<!--insert into ghl_excl(id,`name`,classes)-->
+			<!--values-->
+			<!--<foreach collection="list" item="item"  separator=",">-->
+				<!--(#{item.id},#{item.name},#{item.classes})-->
+			<!--</foreach>-->
+		<!--</insert>-->
+	</insert>
+	<update id="updateUsertestByName" parameterType="com.stylefeng.guns.common.persistence.model.Usertest">
+		update usertest
+		set
+		phone=#{phone},
+		address=#{address},
+		enrol_date=#{enrolDate},
+		des=#{des}
+		where name = #{name}
+	</update>
+	<select id="selectByName" resultType="java.lang.Integer">
+		SELECT
+		count(*)
+		FROM usertest
+		WHERE name=#{name}
+	</select>
+	<select id="selectAll" resultType="com.stylefeng.guns.common.persistence.model.Usertest">
+		SELECT
+		*
+		FROM usertest
+	</select>
+</mapper>

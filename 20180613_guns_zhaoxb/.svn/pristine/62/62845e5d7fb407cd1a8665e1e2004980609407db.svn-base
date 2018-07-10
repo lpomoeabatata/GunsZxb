@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>uploadimg.html</title>
+
+    <meta name="keywords" content="keyword1,keyword2,keyword3"></meta>
+    <meta name="description" content="this is my page"></meta>
+    <meta name="content-type" content="text/html; charset=UTF-8"></meta>
+
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+</head>
+
+<body>
+<form enctype="multipart/form-data" method="post"  action="/FileImport/import" id="formsubmit">
+   <input type="file" name="file"/>
+    <input type="submit" value="上传"/>
+</form>
+
+
+<form action="/FileImport/upload" method="POST" enctype="multipart/form-data">
+    文件：<input type="file" name="test"/>
+    <input type="submit" />
+</form>
+<a href="/FileImport/download">下载test</a>
+<a href="/FileImport/Down">下载111</a>
+<p>多文件上传</p>
+<form method="POST" enctype="multipart/form-data" action="/FileImport/batch/upload">
+    <p>文件1：<input type="file" name="file" /></p>
+    <p>文件2：<input type="file" name="file" /></p>
+    <p><input type="submit" value="上传" /></p>
+</form>
+</body>
+</html>

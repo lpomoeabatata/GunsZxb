@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../../../static/js/ajaxFileUpload.js"></script>
+    <script type="text/javascript">
+        jQuery(function () {
+            $("#import").click(function () {
+                if ($("#file1").val().length > 0) {
+                    ajaxFileUpload();
+                }
+                else {
+                    alert("请选择需要导入的Excel文件!");
+                }
+            })
+        });
+        function ajaxFileUpload(){
+            $("#import").attr("value","处理中...");
+            $.ajaxFileUpload({
+                url: 'import', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'file1', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    $("#import").attr("disabled",false);
+                    $("#import").attr("value","导入EXCEL");
+                    if(data === 2){
+                        alert("上传成功");
+                    }else{
+                        alert("上传失败");
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert("服务器繁忙");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<input type="file" id="file1" name="myfiles"  />
+<input type="button" id="import" value="导入EXCEL" />
+</body>
+</html>
